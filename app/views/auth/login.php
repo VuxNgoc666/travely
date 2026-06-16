@@ -16,10 +16,10 @@
         <h2>Đăng nhập</h2>
         <p class="auth-lead">Nhập tài khoản để tiếp tục đặt tour hoặc quản lý hệ thống.</p>
         <label>Tài khoản
-            <input type="text" name="email" placeholder="admin" autocomplete="username" required>
+            <input type="text" name="email" placeholder="" autocomplete="username" required>
         </label>
         <label>Mật khẩu
-            <input type="password" name="password" placeholder="123456" autocomplete="current-password" required>
+            <input type="password" name="password" placeholder="" autocomplete="current-password" required>
         </label>
         <button class="btn primary full auth-submit" type="submit">Vào hệ thống</button>
         <p class="auth-switch">Chưa có tài khoản? <a href="<?= url('register') ?>">Đăng ký ngay</a></p>

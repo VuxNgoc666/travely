@@ -27,8 +27,14 @@
                             <span class="status <?= e($booking['status']) ?>"><?= e(status_label($booking['status'])) ?></span>
                             <h3><a href="<?= url('tour/' . $booking['slug']) ?>"><?= e($booking['tour_title']) ?></a></h3>
                             <p><?= e($booking['destination']) ?> · <?= (int) $booking['guests'] ?> khách · <?= e(date('d/m/Y', strtotime($booking['start_date']))) ?></p>
+                            <p>Thanh toán: <?= e(payment_status_label($booking['payment_status'] ?? 'unpaid')) ?><?php if (!empty($booking['transaction_code'])): ?> · Mã GD: <?= e($booking['transaction_code']) ?><?php endif; ?></p>
                         </div>
-                        <strong><?= money($booking['total_price']) ?></strong>
+                        <div class="booking-actions">
+                            <strong><?= money($booking['total_price']) ?></strong>
+                            <?php if (($booking['payment_status'] ?? 'unpaid') !== 'paid'): ?>
+                                <a class="btn ghost small" href="<?= url('payment/' . $booking['id']) ?>">Thanh toán</a>
+                            <?php endif; ?>
+                        </div>
                     </article>
                 <?php endforeach; ?>
             </div>

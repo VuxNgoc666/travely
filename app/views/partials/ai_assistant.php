@@ -40,8 +40,11 @@ $quickReplies = $isAdminAssistant ? [
     ['label' => 'Ưu đãi', 'query' => 'Có ưu đãi nào không?'],
     ['label' => 'Cách đặt tour', 'query' => 'Cách đặt tour như thế nào?'],
 ];
+$assistantBookingTotal = isset($booking['total_price']) ? (float) $booking['total_price'] : null;
+$assistantBookingGuests = isset($booking['guests']) ? (int) $booking['guests'] : null;
+$assistantTourPrice = isset($tour['price']) ? (float) $tour['price'] : null;
 ?>
-<section class="ai-assistant ai-chat-only <?= $isAdminAssistant ? 'admin-ai-assistant' : '' ?> <?= $isInlineAssistant ? 'ai-inline-assistant' : '' ?>" data-ai-assistant data-ai-mode="<?= e($assistantMode) ?>">
+<section class="ai-assistant ai-chat-only <?= $isAdminAssistant ? 'admin-ai-assistant' : '' ?> <?= $isInlineAssistant ? 'ai-inline-assistant' : '' ?>" data-ai-assistant data-ai-mode="<?= e($assistantMode) ?>" data-ai-endpoint="<?= e(url('ai/ask')) ?>" data-ai-csrf="<?= e(csrf_token()) ?>" data-ai-page-title="<?= e($title ?? APP_NAME) ?>" data-ai-current-path="<?= e(trim(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/')) ?>" data-ai-booking-total="<?= e($assistantBookingTotal ?? '') ?>" data-ai-booking-guests="<?= e($assistantBookingGuests ?? '') ?>" data-ai-tour-price="<?= e($assistantTourPrice ?? '') ?>" data-ai-booking-reference="<?= e($booking['payment_reference'] ?? '') ?>" data-ai-tour-title="<?= e($tour['title'] ?? '') ?>">
     <div class="ai-chat-panel" data-ai-panel>
         <header>
             <div>

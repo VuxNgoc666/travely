@@ -112,6 +112,15 @@ document.querySelectorAll('[data-ai-assistant]').forEach((assistant) => {
     const input = assistant.querySelector('[data-ai-input]');
     const walkToggle = assistant.querySelector('[data-ai-walk-toggle]');
     const toursSource = assistant.querySelector('[data-ai-tours]');
+    const endpoint = assistant.dataset.aiEndpoint || '';
+    const csrfToken = assistant.dataset.aiCsrf || '';
+    const pageTitle = assistant.dataset.aiPageTitle || '';
+    const currentPath = assistant.dataset.aiCurrentPath || '';
+    const bookingTotal = assistant.dataset.aiBookingTotal || '';
+    const bookingGuests = assistant.dataset.aiBookingGuests || '';
+    const tourPrice = assistant.dataset.aiTourPrice || '';
+    const bookingReference = assistant.dataset.aiBookingReference || '';
+    const tourTitle = assistant.dataset.aiTourTitle || '';
     const chatOnly = assistant.classList.contains('ai-chat-only');
     const inlineAssistant = assistant.classList.contains('ai-inline-assistant');
     const assistantMode = assistant.dataset.aiMode || 'site';
@@ -240,6 +249,7 @@ document.querySelectorAll('[data-ai-assistant]').forEach((assistant) => {
         item.innerHTML = text;
         messages.appendChild(item);
         messages.scrollTop = messages.scrollHeight;
+        return item;
     };
 
     const tourLink = (tour) => `<a href="${tour.url}">${tour.title}</a> · ${tour.duration} · ${tour.price}`;
@@ -315,13 +325,67 @@ document.querySelectorAll('[data-ai-assistant]').forEach((assistant) => {
         return 'Mình có thể gợi ý tour biển, tour trong nước, tour nước ngoài, ưu đãi, hoặc hướng dẫn cách đặt tour. Bạn thử nhập: “gợi ý tour biển 3 ngày” nhé.';
     };
 
-    const submitQuery = (query) => {
+    const renderSuggestions = (suggestions = []) => {
+        if (!suggestions.length) {
+            return '';
+        }
+
+        const cards = suggestions.map((item) => `
+            <a class="ai-suggestion-card" href="${item.url}">
+                <strong>${item.title}</strong>
+                <span>${item.meta || ''}</span>
+            </a>
+        `).join('');
+
+        return `<div class="ai-suggestions">${cards}</div>`;
+    };
+
+    const submitQuery = async (query) => {
         const clean = query.trim();
         if (!clean) {
             return;
         }
         addMessage(clean, 'user');
-        setTimeout(() => addMessage(answer(clean), 'bot'), 220);
+
+        const loadingMessage = addMessage('Mình đang xử lý yêu cầu...', 'bot');
+
+        if (!endpoint) {
+            loadingMessage.innerHTML = answer(clean);
+            return;
+        }
+
+        try {
+            const body = new URLSearchParams({
+                _csrf: csrfToken,
+                query: clean,
+                mode: assistantMode,
+                page_title: pageTitle,
+                current_path: currentPath,
+                booking_total: bookingTotal,
+                booking_guests: bookingGuests,
+                tour_price: tourPrice,
+                booking_reference: bookingReference,
+                tour_title: tourTitle,
+            });
+
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: body.toString(),
+            });
+
+            if (!response.ok) {
+                throw new Error(`AI request failed with ${response.status}`);
+            }
+
+            const payload = await response.json();
+            loadingMessage.innerHTML = `${payload.replyHtml || 'Mình chưa tìm thấy kết quả phù hợp.'}${renderSuggestions(payload.suggestions || [])}`;
+        } catch (error) {
+            loadingMessage.innerHTML = answer(clean);
+        }
     };
 
     const setMinimized = (value) => {

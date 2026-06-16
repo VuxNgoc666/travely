@@ -12,6 +12,8 @@
                 <th>Ngày đi</th>
                 <th>Số khách</th>
                 <th>Tổng tiền</th>
+                <th>Thanh toán</th>
+                <th>Mã GD</th>
                 <th>Trạng thái</th>
             </tr>
             </thead>
@@ -23,6 +25,8 @@
                     <td><?= e(date('d/m/Y', strtotime($booking['start_date']))) ?></td>
                     <td><?= (int) $booking['guests'] ?></td>
                     <td><?= money($booking['total_price']) ?></td>
+                    <td><span class="status <?= e(($booking['payment_status'] ?? 'unpaid') === 'paid' ? 'confirmed' : 'pending') ?>"><?= e(payment_status_label($booking['payment_status'] ?? 'unpaid')) ?></span></td>
+                    <td><?= e($booking['transaction_code'] ?? '-') ?></td>
                     <td>
                         <?php if (in_array($booking['status'], ['completed', 'cancelled'], true)): ?>
                             <span class="status-locked"><?= e(status_label($booking['status'])) ?></span>

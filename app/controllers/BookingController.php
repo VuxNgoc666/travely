@@ -44,7 +44,7 @@ class BookingController extends Controller
             redirect('tour/' . $tour['slug']);
         }
 
-        Booking::create([
+        $bookingId = Booking::create([
             'tour_id' => $tour['id'],
             'user_id' => $user['id'],
             'start_date' => $startDate,
@@ -56,7 +56,7 @@ class BookingController extends Controller
             'total_price' => (float) $tour['price'] * $guests,
         ]);
 
-        flash('success', 'Đã gửi yêu cầu đặt tour. Admin sẽ xác nhận trong trang quản trị.');
-        redirect('account');
+        flash('success', 'Đơn booking đã tạo. Bạn có thể thanh toán ngay ở trang tiếp theo.');
+        redirect('payment/' . $bookingId);
     }
 }

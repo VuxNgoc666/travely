@@ -1,8 +1,5 @@
 <section class="neo-hero-panel">
     <div class="neo-hero-copy">
-        <p class="admin-neo-kicker">Travely studio</p>
-        <h2>Quản trị tour gọn, sáng và có điểm nhấn.</h2>
-        <p><?= (int) $pendingBookingCount ?> booking chờ xử lý, <?= (int) $unreadContactCount ?> liên hệ mới, <?= short_money($revenue) ?> doanh thu đã xác nhận.</p>
         <div class="neo-action-row">
             <a class="btn primary" href="<?= url('admin/tours/create') ?>">Thêm tour</a>
             <a class="btn ghost" href="<?= url('admin/bookings') ?>">Xử lý booking</a>

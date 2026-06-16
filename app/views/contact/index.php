@@ -16,7 +16,7 @@
             </article>
             <article>
                 <span>✉</span>
-                <div><small>Email</small><strong>support@travely.vn</strong><p>Phản hồi trong vòng 30 phút</p></div>
+                <div><small>Email</small><strong>iamray74@gmail.com</strong><p>Phản hồi trong vòng 30 phút</p></div>
             </article>
             <article>
                 <span>⌖</span>

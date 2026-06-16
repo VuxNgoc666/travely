@@ -11,6 +11,7 @@ class Database
         }
 
         $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET;
+
         try {
             self::$pdo = new PDO($dsn, DB_USER, DB_PASS, [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -38,4 +39,3 @@ class Database
         return self::connect()->lastInsertId();
     }
 }
-

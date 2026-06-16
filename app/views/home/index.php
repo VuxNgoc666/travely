@@ -33,7 +33,7 @@ $heroImage = versioned_asset('images/ha-long-hero-new.png');
             </label>
             <label>
                 <span>Ngày đi</span>
-                <input type="date" name="start_date" value="<?= date('Y-m-d') ?>" min="<?= date('Y-m-d') ?>" data-min-today>
+                <input type="date" name="start_date" value="" min="<?= date('Y-m-d') ?>" data-min-today>
             </label>
             <label>
                 <span>Phong cách</span>
@@ -85,7 +85,7 @@ $heroImage = versioned_asset('images/ha-long-hero-new.png');
     <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1800&q=85" alt="Landscape">
     <div>
         <p class="eyebrow">Ưu đãi độc quyền</p>
-        <h2>Bay qua mùa hè với giảm giá đến 30%</h2>
+        <h2>Giảm 30%</h2>
         <p>Nhóm từ 4 khách được áp dụng ưu đãi tự động trong danh sách deal.</p>
         <a class="btn white" href="<?= url('deals') ?>">Xem deal</a>
     </div>
@@ -113,7 +113,7 @@ $heroImage = versioned_asset('images/ha-long-hero-new.png');
 <section class="section split-showcase">
     <div>
         <p class="eyebrow">Global moodboard</p>
-        <h2>Không chỉ đặt tour, hãy chọn một mood cho chuyến đi.</h2>
+        <h2>Tour nước ngoài</h2>
         <p>Từ Seoul mùa hoa, Zurich hồ xanh, đến Bangkok nắng vàng, mỗi tour được đặt trong một không gian hình ảnh riêng để người dùng lướt là muốn đi.</p>
         <a class="btn primary" href="<?= url('tours/foreign') ?>">Mở bản đồ quốc tế</a>
     </div>
@@ -143,19 +143,5 @@ $heroImage = versioned_asset('images/ha-long-hero-new.png');
                 </div>
             </a>
         <?php endforeach; ?>
-    </div>
-</section>
-
-<section class="section testimonials">
-    <div class="section-heading">
-        <div>
-            <p class="eyebrow">Reviews</p>
-            <h2>Khách hàng nói gì</h2>
-        </div>
-    </div>
-    <div class="testimonial-grid">
-        <article class="quote-card reveal"><strong>Nguyễn Vy</strong><p>Lịch trình rõ, giao diện đặt tour đẹp và admin xác nhận rất nhanh.</p></article>
-        <article class="quote-card reveal"><strong>Trần Minh</strong><p>Tôi thích phần chi tiết tour có gallery và timeline từng ngày, rất dễ chọn.</p></article>
-        <article class="quote-card reveal"><strong>Lê Hà</strong><p>Trang nhìn khác hẳn kiểu web tour cũ, nhiều ảnh lớn và hiệu ứng mượt.</p></article>
     </div>
 </section>

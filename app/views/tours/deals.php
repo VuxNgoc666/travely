@@ -26,16 +26,6 @@ $destDeals = [
 </section>
 
 <section class="deals-section">
-    <div class="deal-tabs">
-        <a class="active" href="<?= url('deals') ?>">Ưu đãi du lịch</a>
-        <a href="#destinations">Ưu đãi theo điểm đến</a>
-        <a href="#specials">Ưu đãi theo chủ đề</a>
-        <a href="#programs">Ưu đãi thanh toán</a>
-        <a href="#programs">Ưu đãi đối tác</a>
-    </div>
-</section>
-
-<section class="deals-section">
     <div class="section-heading">
         <div>
             <p class="eyebrow">Trending</p>

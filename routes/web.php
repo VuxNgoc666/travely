@@ -17,6 +17,10 @@ $app->get('logout', 'AuthController@logout');
 
 $app->get('account', 'UserController@dashboard');
 $app->post('booking/store', 'BookingController@store');
+$app->get('payment/{id}', 'PaymentController@show');
+$app->post('payment/{id}', 'PaymentController@confirm');
+$app->get('payment/success/{id}', 'PaymentController@success');
+$app->post('ai/ask', 'AiController@ask');
 $app->post('favorite/toggle', 'UserController@toggleFavorite');
 
 $app->get('admin', 'AdminController@dashboard');

@@ -84,7 +84,7 @@
         <div>
             <h3>Văn phòng</h3>
             <p>123 Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh</p>
-            <p>support@travely.vn</p>
+            <p>iamray74@gmail.com</p>
         </div>
     </div>
     <div class="footer-bottom">© 2026 Travely. Crafted for XAMPP MVC demo.</div>

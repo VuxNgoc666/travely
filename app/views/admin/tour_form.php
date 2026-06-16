@@ -3,6 +3,14 @@ function lines_value($value) {
     return e(implode("\n", json_list($value)));
 }
 
+function sorted_date_lines_value($value) {
+    $dates = array_values(array_filter(json_list($value), function ($date) {
+        return is_string($date) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $date);
+    }));
+    sort($dates, SORT_STRING);
+    return e(implode("\n", $dates));
+}
+
 function image_preview_class($value) {
     return trim((string) $value) === '' ? ' image-url-preview-empty' : '';
 }
@@ -113,7 +121,7 @@ function image_preview_class($value) {
             <textarea name="included" rows="5"><?= lines_value($tour['included']) ?></textarea>
         </label>
         <label class="wide">Ngày khởi hành, mỗi dòng định dạng YYYY-MM-DD
-            <textarea name="start_dates" rows="4"><?= lines_value($tour['start_dates']) ?></textarea>
+            <textarea name="start_dates" rows="4"><?= sorted_date_lines_value($tour['start_dates']) ?></textarea>
         </label>
     </div>
 </form>

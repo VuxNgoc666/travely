@@ -7,6 +7,7 @@ $today = date('Y-m-d');
 $startDates = array_values(array_filter(json_list($tour['start_dates']), function ($date) use ($today) {
     return is_string($date) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $date) && $date >= $today;
 }));
+sort($startDates, SORT_STRING);
 if (!$gallery) {
     $gallery = [$tour['thumbnail'], $tour['hero_image']];
 }

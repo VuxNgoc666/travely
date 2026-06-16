@@ -1,4 +1,5 @@
-
+CREATE DATABASE IF NOT EXISTS travely_cinematic_mvc CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE travely_cinematic_mvc;
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
@@ -65,13 +66,7 @@ CREATE TABLE bookings (
     notes TEXT,
     total_price DECIMAL(12,0) NOT NULL DEFAULT 0,
     status ENUM('pending', 'confirmed', 'completed', 'cancelled') NOT NULL DEFAULT 'pending',
-    payment_method ENUM('bank_transfer', 'card', 'ewallet') DEFAULT NULL,
-    payment_status ENUM('unpaid', 'paid') NOT NULL DEFAULT 'unpaid',
-    payment_reference VARCHAR(40) DEFAULT NULL,
-    transaction_code VARCHAR(120) DEFAULT NULL,
-    paid_at TIMESTAMP NULL DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE KEY unique_payment_reference (payment_reference),
     CONSTRAINT fk_bookings_tour FOREIGN KEY (tour_id) REFERENCES tours(id) ON DELETE CASCADE,
     CONSTRAINT fk_bookings_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

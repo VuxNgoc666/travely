@@ -32,7 +32,7 @@ function media_url($path)
 function versioned_asset($path)
 {
     $relativePath = 'assets/' . ltrim($path, '/');
-    $fullPath = ROOT_PATH . '/public/' . $relativePath;
+    $fullPath = ROOT_PATH . '/' . $relativePath;
     $version = is_file($fullPath) ? filemtime($fullPath) : time();
 
     return url($relativePath) . '?v=' . $version;
@@ -146,6 +146,16 @@ function status_label($status)
         'confirmed' => 'Đã xác nhận',
         'completed' => 'Hoàn tất',
         'cancelled' => 'Đã hủy',
+    ];
+
+    return $map[$status] ?? $status;
+}
+
+function payment_status_label($status)
+{
+    $map = [
+        'unpaid' => 'Chưa thanh toán',
+        'paid' => 'Đã thanh toán',
     ];
 
     return $map[$status] ?? $status;

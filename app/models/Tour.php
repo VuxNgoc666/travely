@@ -6,6 +6,7 @@ class Tour
     {
         $where = [];
         $params = [];
+        $keyword = trim((string) ($filters['keyword'] ?? ''));
 
         if (($filters['admin'] ?? false) !== true) {
             $where[] = 'status = :status';
@@ -25,14 +26,6 @@ class Tour
         if (!empty($filters['category'])) {
             $where[] = 'category = :category';
             $params[':category'] = $filters['category'];
-        }
-
-        if (!empty($filters['keyword'])) {
-            $where[] = '(title LIKE :keyword_title OR destination LIKE :keyword_destination OR country LIKE :keyword_country)';
-            $keyword = '%' . $filters['keyword'] . '%';
-            $params[':keyword_title'] = $keyword;
-            $params[':keyword_destination'] = $keyword;
-            $params[':keyword_country'] = $keyword;
         }
 
         if (!empty($filters['start_date']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $filters['start_date'])) {
@@ -71,11 +64,34 @@ class Tour
         }
         $sql .= ' ORDER BY ' . $order;
 
-        if (!empty($filters['limit'])) {
-            $sql .= ' LIMIT ' . (int) $filters['limit'];
+        $tours = Database::query($sql, $params)->fetchAll();
+
+        if ($keyword !== '') {
+            $normalizedKeyword = self::normalizeSearch($keyword);
+            $tours = array_values(array_filter($tours, function ($tour) use ($normalizedKeyword) {
+                $haystacks = [
+                    $tour['title'] ?? '',
+                    $tour['destination'] ?? '',
+                    $tour['country'] ?? '',
+                    $tour['region'] ?? '',
+                    $tour['slug'] ?? '',
+                ];
+
+                foreach ($haystacks as $haystack) {
+                    if (str_contains(self::normalizeSearch($haystack), $normalizedKeyword)) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }));
         }
 
-        return Database::query($sql, $params)->fetchAll();
+        if (!empty($filters['limit'])) {
+            $tours = array_slice($tours, 0, (int) $filters['limit']);
+        }
+
+        return $tours;
     }
 
     public static function featured($limit = 6)
@@ -205,10 +221,42 @@ class Tour
         ];
     }
 
+    private static function sortDateList(array $values)
+    {
+        $dates = array_values(array_filter($values, function ($value) {
+            return is_string($value) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $value);
+        }));
+
+        sort($dates, SORT_STRING);
+
+        return $dates;
+    }
+
+    private static function normalizeDateLines($value)
+    {
+        if (is_array($value)) {
+            return self::sortDateList($value);
+        }
+
+        $value = trim((string) $value);
+        if ($value === '') {
+            return [];
+        }
+
+        $decoded = json_decode($value, true);
+        if (is_array($decoded)) {
+            return self::sortDateList($decoded);
+        }
+
+        $lines = preg_split('/\r\n|\r|\n/', $value);
+        return self::sortDateList($lines ?: []);
+    }
+
     private static function sanitize(array $data)
     {
         $title = trim($data['title'] ?? '');
         $slug = trim($data['slug'] ?? '') ?: slugify($title);
+        $startDates = self::normalizeDateLines($data['start_dates'] ?? '');
 
         return [
             ':title' => $title,
@@ -234,7 +282,7 @@ class Tour
             ':highlights' => self::linesToJson($data['highlights'] ?? ''),
             ':itinerary' => self::linesToJson($data['itinerary'] ?? ''),
             ':included' => self::linesToJson($data['included'] ?? ''),
-            ':start_dates' => self::linesToJson($data['start_dates'] ?? ''),
+            ':start_dates' => json_encode($startDates, JSON_UNESCAPED_UNICODE),
             ':status' => $data['status'] ?? 'active',
             ':featured' => !empty($data['featured']) ? 1 : 0,
         ];
@@ -260,5 +308,21 @@ class Tour
         $lines = array_values(array_filter(array_map('trim', $lines)));
 
         return json_encode($lines, JSON_UNESCAPED_UNICODE);
+    }
+
+    private static function normalizeSearch($value)
+    {
+        $value = mb_strtolower(trim((string) $value), 'UTF-8');
+        $value = str_replace(
+            ['đ', 'Đ'],
+            ['d', 'd'],
+            $value
+        );
+
+        $ascii = @iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $value);
+        $value = $ascii !== false ? $ascii : $value;
+        $value = preg_replace('/[^a-z0-9]+/', ' ', $value);
+
+        return trim((string) $value);
     }
 }
